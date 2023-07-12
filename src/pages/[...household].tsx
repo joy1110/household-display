@@ -5,6 +5,8 @@ import { HouseholdData, TownType } from '@/lib/utilsType';
 import validateDistrict from '@/lib/validateDistrict';
 import summingHouseholdData from '@/lib/summingHouseholdData';
 import HouseholdInputs from '@/components/HouseholdInputs';
+import ColumnChart from '@/components/ColumnChart';
+import PieChart from '@/components/PieChart';
 
 type Props = {
   townList: TownType[];
@@ -51,8 +53,6 @@ export default function Household({
   isDistrictValid,
   householdData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // console.log(householdData);
-
   if (!isDistrictValid) {
     return (
       <div>
@@ -62,11 +62,15 @@ export default function Household({
   }
 
   return (
-    <HouseholdInputs
-      townList={townListData}
-      year={year}
-      county={county}
-      district={district}
-    />
+    <>
+      <HouseholdInputs
+        townList={townListData}
+        year={year}
+        county={county}
+        district={district}
+      />
+      <ColumnChart householdData={householdData} />
+      <PieChart householdData={householdData} />
+    </>
   );
 }
