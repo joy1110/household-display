@@ -1,12 +1,18 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router'
 import axios from 'axios';
 import townList from '@/data/townList.json';
 import { HouseholdData, TownType } from '@/lib/utilsType';
 import validateDistrict from '@/lib/validateDistrict';
 import summingHouseholdData from '@/lib/summingHouseholdData';
+import { Grid, Typography, useMediaQuery } from '@mui/material';
+import Image from 'next/image';
+import Header from '@/components/Header';
 import HouseholdInputs from '@/components/HouseholdInputs';
-import ColumnChart from '@/components/ColumnChart';
-import PieChart from '@/components/PieChart';
+import CustomDivider from '@/components/CustomDivider';
+import ChartSection from '@/components/ChartSection';
+import Loading from '@/components/Loading';
 
 type Props = {
   townList: TownType[];
@@ -53,24 +59,123 @@ export default function Household({
   isDistrictValid,
   householdData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!isDistrictValid) {
-    return (
-      <div>
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const endLoading = () => setIsLoading(false);
+    const startLoading = () => setIsLoading(true);
+
+    router.events.on('routeChangeStart', startLoading);
+    router.events.on('routeChangeComplete', endLoading);
+
+    return () => {
+      router.events.off('routeChangeStart', startLoading);
+      router.events.off('routeChangeComplete', endLoading);
+    };
+  }, []);
+
+  const renderContent = () => {
+    if (!isDistrictValid) {
+      return (<Typography
+        variant="h1"
+        align="center"
+        sx={{
+          fontSize: {
+            xs: '25px',
+            sm: '32px',
+          },
+          fontWeight: 'medium',
+          marginTop: {
+            xs: '34px',
+            sm: '42px',
+          },
+        }}
+      >
         無效的縣市/行政區
-      </div>
+      </Typography>);
+    }
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    return (
+      <ChartSection
+        year={year}
+        county={county}
+        district={district}
+        householdData={householdData}
+      />
     );
   }
 
   return (
     <>
-      <HouseholdInputs
-        townList={townListData}
-        year={year}
-        county={county}
-        district={district}
-      />
-      <ColumnChart householdData={householdData} />
-      <PieChart householdData={householdData} />
+      <Header />
+      <main className='relative pt-12 z-0'>
+        <Image
+          className='absolute top-[56px] left-0 w-[149px] h-[971px] -z-10 opacity-20 sm:opacity-100'
+          src="/images/bg-text-taiwan.png"
+          alt=""
+          width={149}
+          height={971}
+        />
+        <Grid
+          sx={{
+            padding: {
+              xs: '24px 8px 0',
+              sm: '24px 0 0',
+            },
+            width: {
+              xs: 'auto',
+              sm: '69.72%'
+            },
+            marginLeft: {
+              xs: 0,
+              sm: '20.31%',
+            },
+          }}
+        >
+          <Typography
+            variant="h1"
+            align="center"
+            sx={{
+              fontSize: {
+                xs: '25px',
+                sm: '32px',
+              },
+              fontWeight: 'medium',
+            }}
+          >人口數、戶數按戶別及性別統計</Typography>
+          <Grid
+            sx={{
+              marginTop: {
+                xs: '32px',
+                sm: '48px',
+              },
+            }}
+          >
+            <HouseholdInputs
+              townList={townListData}
+              year={year}
+              county={county}
+              district={district}
+            />
+          </Grid>
+          <Grid
+            sx={{
+              marginTop: {
+                xs: '34px',
+                sm: '42px',
+              },
+            }}
+          >
+            <CustomDivider />
+          </Grid>
+          {renderContent()}
+        </Grid>
+      </main>
     </>
   );
 }

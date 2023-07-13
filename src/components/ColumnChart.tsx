@@ -10,6 +10,7 @@ export default function ColumnChart({ householdData }: { householdData: Househol
   const options: Options = {
     chart: {
       type: 'column',
+      backgroundColor: 'transparent',
     },
     title: {
       text: '人口數統計',

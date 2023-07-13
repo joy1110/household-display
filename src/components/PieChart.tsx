@@ -3,6 +3,8 @@ import HighchartsReact from 'highcharts-react-official';
 import { HouseholdData } from '../lib/utilsType';
 
 export default function PieChart({ householdData }: { householdData: HouseholdData | null }) {
+
+
   if (!householdData) return <></>;
 
   const { household_ordinary_m, household_single_m, household_ordinary_f, household_single_f } = householdData;
@@ -10,6 +12,7 @@ export default function PieChart({ householdData }: { householdData: HouseholdDa
   const options: Options = {
     chart: {
       type: 'pie',
+      backgroundColor: 'transparent',
     },
     title: {
       text: '戶數統計',
