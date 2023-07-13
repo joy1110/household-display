@@ -13,20 +13,20 @@
 
 1.  安裝 npm 套件
 
-```
-npm i --legacy-peer-deps
-```
+    ```sh
+    npm i --legacy-peer-deps
+    ```
 
-因 ESLint 相依套件有衝突，一定要加上 `--legacy-peer-deps`。
+    因 ESLint 相依套件有衝突，一定要加上 `--legacy-peer-deps`。
 
-2. 啟動專案
+2.  啟動專案
 
-```
-npm run dev
-```
+    ```sh
+    npm run dev
+    ```
 
-3. 打包專案
+3.  打包專案
 
-```
-npm run build
-```
+    ```sh
+    npm run build
+    ```
