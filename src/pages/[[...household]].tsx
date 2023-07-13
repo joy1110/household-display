@@ -26,7 +26,7 @@ type Props = {
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params = {},
 }) => {
-  const { household } = params;
+  const { household = [] } = params;
   const [year = '', county = '', district = ''] = household as string[];
   const isDistrictValid = validateDistrict(county, district);
   let householdData = null;
@@ -76,6 +76,8 @@ export default function Household({
   }, []);
 
   const renderContent = () => {
+    if (Object.keys(router.query).length === 0) return <></>;
+
     if (!isDistrictValid) {
       return (<Typography
         variant="h1"
