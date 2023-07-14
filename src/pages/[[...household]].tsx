@@ -73,7 +73,7 @@ export default function Household({
       router.events.off('routeChangeStart', startLoading);
       router.events.off('routeChangeComplete', endLoading);
     };
-  }, []);
+  }, [router.query]);
 
   const renderContent = () => {
     if (Object.keys(router.query).length === 0) return <></>;
