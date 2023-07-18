@@ -76,6 +76,10 @@ export default function Household({
   }, [router.query]);
 
   const renderContent = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+
     if (Object.keys(router.query).length === 0) return <></>;
 
     if (!isDistrictValid) {
@@ -96,10 +100,6 @@ export default function Household({
       >
         無效的縣市/行政區
       </Typography>);
-    }
-
-    if (isLoading) {
-      return <Loading />;
     }
 
     return (
